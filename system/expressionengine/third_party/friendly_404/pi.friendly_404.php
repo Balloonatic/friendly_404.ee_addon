@@ -114,7 +114,8 @@ class Friendly_404{
         ----------------------------------------*/
         
         $url = ($row['search_results_url'] != '') ? $row['search_results_url'] : $row['channel_url'];
-        $row['auto_path'] = $this->EE->functions->remove_double_slashes($this->EE->functions->prep_query_string($url).'/'.$row['url_title'].'/');
+        
+        $row['auto_path'] = reduce_double_slashes($this->EE->functions->prep_query_string($url).'/'.$row['url_title'].'/');
 
         /*---------------------------------------
         Conditionals
@@ -126,13 +127,12 @@ class Friendly_404{
         Single variables
         ----------------------------------------*/
         
-        foreach ($this->EE->TMPL->var_single as $key => $val)
+        foreach ( $row as $key => $val )
         {
-          if (isset($row->$val))
-          {
-              $tagdata = $this->EE->TMPL->swap_var_single($val, $row[$val], $tagdata);
-          }
-        } 
+        	$tagdata	= $this->EE->TMPL->swap_var_single( $key, $val, $tagdata );
+        }
+        
+
       $this->return_data .= $tagdata;      
       } 
     }	
@@ -143,7 +143,7 @@ class Friendly_404{
   *
   * @return	string Plugin usage instructions
   */
-  public function usage()
+  public static function usage()
   {
     return "Documentation is available here http://shapeshed.github.com/expressionengine/plugins/friendly_404/";
   }
